@@ -1,35 +1,31 @@
 import 'dotenv/config';
 import express from 'express';
 import cors from 'cors';
-import connectDB from '../src/config/db.js';
-import errorHandler from '../src/middleware/errorHandler.js';
+import connectDB from './config/db.js';
+import errorHandler from './middleware/errorHandler.js';
 
 // Import routes
-import authRoutes from '../src/routes/authRoutes.js';
-import announcementRoutes from '../src/routes/announcementRoutes.js';
-import prayerRoutes from '../src/routes/prayerRoutes.js';
-import sermonRoutes from '../src/routes/sermonRoutes.js';
-import photoRoutes from '../src/routes/photoRoutes.js';
-import eventRoutes from '../src/routes/eventRoutes.js';
-import bibleRoutes from '../src/routes/bibleRoutes.js';
+import authRoutes from './routes/authRoutes.js';
+import announcementRoutes from './routes/announcementRoutes.js';
+import prayerRoutes from './routes/prayerRoutes.js';
+import sermonRoutes from './routes/sermonRoutes.js';
+import photoRoutes from './routes/photoRoutes.js';
+import eventRoutes from './routes/eventRoutes.js';
+import bibleRoutes from './routes/bibleRoutes.js';
 
 const app = express();
+const PORT = process.env.PORT || 5000;
 
 // Middleware
 app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
+// Connect to database
+connectDB();
+
 // Health check route
 app.get('/', (req, res) => {
-  res.json({
-    success: true,
-    message: 'Faith Connect API is running',
-    version: '1.0.0'
-  });
-});
-
-app.get('/api', (req, res) => {
   res.json({
     success: true,
     message: 'Faith Connect API is running',
@@ -50,32 +46,16 @@ app.use('/api/bible', bibleRoutes);
 app.use((req, res) => {
   res.status(404).json({
     success: false,
-    message: 'Route not found',
-    path: req.path
+    message: 'Route not found'
   });
 });
 
 // Error Handler (must be last)
 app.use(errorHandler);
 
-// Connect to database before handling requests
-let isConnected = false;
+// Start server
+app.listen(PORT, () => {
+  console.log(`🚀 Server running in ${process.env.NODE_ENV || 'development'} mode on port ${PORT}`);
+});
 
-const handler = async (req, res) => {
-  if (!isConnected) {
-    try {
-      await connectDB();
-      isConnected = true;
-    } catch (error) {
-      console.error('Database connection error:', error);
-      return res.status(500).json({
-        success: false,
-        message: 'Database connection failed'
-      });
-    }
-  }
-  
-  return app(req, res);
-};
-
-export default handler;
+export default app;
