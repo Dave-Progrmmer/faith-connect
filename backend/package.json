@@ -2,12 +2,16 @@
   "name": "faith-connect-backend",
   "version": "1.0.0",
   "description": "Faith Connect - Church App Backend API",
-  "main": "src/server.js",
+  "main": "api/index.js",
   "type": "module",
+  "engines": {
+    "node": ">=18.x"
+  },
   "scripts": {
     "start": "node src/server.js",
     "dev": "nodemon src/server.js",
-    "seed": "node src/seed/seedAdmin.js"
+    "seed": "node src/seed/seedAdmin.js",
+    "vercel-build": "echo 'Build complete'"
   },
   "keywords": [
     "church",
