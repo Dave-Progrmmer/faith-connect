@@ -2,7 +2,7 @@
   "name": "faith-connect-backend",
   "version": "1.0.0",
   "description": "Faith Connect - Church App Backend API",
-  "main": "api/index.js",
+  "main": "src/server.js",
   "type": "module",
   "engines": {
     "node": ">=18.x"
