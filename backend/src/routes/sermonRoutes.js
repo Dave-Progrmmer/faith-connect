@@ -1,23 +1,36 @@
 import express from 'express';
 import {
-  uploadPhoto,
-  getPhotos,
-  deletePhoto
-} from '../controllers/photoController.js';
+  createSermon,
+  getSermons,
+  getSermon,
+  deleteSermon
+} from '../controllers/sermonController.js';
 import { protect } from '../middleware/auth.js';
 import { admin } from '../middleware/admin.js';
-import { uploadImage } from '../config/cloud.js';
-import { photoValidator, objectIdValidator } from '../utils/validators.js';
+import { uploadSermon } from '../config/cloud.js';
+import { sermonValidator, objectIdValidator } from '../utils/validators.js';
 
 const router = express.Router();
 
 router
   .route('/')
-  .post(protect, admin, uploadImage.single('photo'), photoValidator, uploadPhoto)
-  .get(getPhotos);
+  .post(
+    protect, 
+    admin, 
+    uploadSermon.fields([
+      { name: 'audio', maxCount: 1 },
+      { name: 'video', maxCount: 1 },
+      { name: 'notes', maxCount: 1 },
+      { name: 'thumbnail', maxCount: 1 }
+    ]),
+    sermonValidator, 
+    createSermon
+  )
+  .get(getSermons);
 
 router
   .route('/:id')
-  .delete(protect, admin, objectIdValidator(), deletePhoto);
+  .get(objectIdValidator(), getSermon)
+  .delete(protect, admin, objectIdValidator(), deleteSermon);
 
 export default router;
