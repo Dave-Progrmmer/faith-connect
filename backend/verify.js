@@ -1,6 +1,6 @@
 
 
-const BASE_URL = 'http://localhost:5000/api';
+const BASE_URL = 'https://faith-connect-alpha.vercel.app/api';
 let ministerToken = '';
 let memberToken = '';
 
